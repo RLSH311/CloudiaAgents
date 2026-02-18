@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+
+  inventory-daemon:
+    image: inventory-daemon:latest
+    depends_on:
+      - redis
+    environment:
+      INV_REDIS_HOST: redis
+      INV_REDIS_PORT: ${REDIS_PORT}
+      INV_REDIS_DB: 0
+    restart: unless-stopped
