@@ -23,4 +23,16 @@ services:
       - /dev:/dev
       - /sys:/sys:ro
       - /run/udev:/run/udev:ro
-      - /mnt:/mnt
+      - /mnt:/mnt:rshared
+
+  inventory-service:
+    image: inventory-service:dev
+    depends_on:
+      - redis
+    env_file:
+      - .env.dev
+    ports:
+      - "${INV_SERVICE_APP_PORT:-8000}:${INV_SERVICE_APP_PORT:-8000}"
+    environment:
+      INV_SERVICE_REDIS_HOST: redis
+    restart: unless-stopped
