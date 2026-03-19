@@ -47,15 +47,17 @@ services:
     ports:
       - "0.0.0.0:${JOB_SERVICE_DB_PORT:-5432}:5432"
 
-#   job-service:
-#     image: job-service:dev
-#     depends_on:
-#       - job-service-db
-#     env_file:
-#       - .env.job-service
-#     ports:
-#       - "${JOB_SERVICE_APP_PORT:-8001}:${JOB_SERVICE_APP_PORT:-8001}"
-#     restart: unless-stopped
+  job-service-api:
+    image: job-service-api:dev
+    depends_on:
+      - job-service-db
+    env_file:
+      - .env.job-service
+    environment:
+      JOB_SERVICE_DB_HOST: job-service-db
+    ports:
+      - "${JOB_SERVICE_APP_PORT:-8001}:${JOB_SERVICE_APP_PORT:-8001}"
+    restart: unless-stopped
 
 volumes:
   job-service-db-data:
