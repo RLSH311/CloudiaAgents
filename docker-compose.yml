@@ -36,3 +36,26 @@ services:
     environment:
       INV_SERVICE_REDIS_HOST: redis
     restart: unless-stopped
+
+  job-service-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - .env.job-service
+    volumes:
+      - job-service-db-data:/var/lib/postgresql/data
+    ports:
+      - "0.0.0.0:${JOB_SERVICE_DB_PORT:-5432}:5432"
+
+#   job-service:
+#     image: job-service:dev
+#     depends_on:
+#       - job-service-db
+#     env_file:
+#       - .env.job-service
+#     ports:
+#       - "${JOB_SERVICE_APP_PORT:-8001}:${JOB_SERVICE_APP_PORT:-8001}"
+#     restart: unless-stopped
+
+volumes:
+  job-service-db-data:
